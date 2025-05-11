@@ -1,10 +1,12 @@
 # NutriGuide Expert System
 
 ## Expert System Description
-The NutriGuide Expert System is a full-stack website that uses React + Typescript for its frontend and Flask for backend.  
-The NutriGuide Expert System is using a hybrid method that combines both the Rules-Based and Fuzzy Logic approach.
+* The NutriGuide Expert System is a full-stack website that uses React + Typescript for its frontend and Flask for backend.  
+* The NutriGuide Expert System is using a hybrid method that combines both the Rules-Based and Fuzzy Logic approach.  
+* This expert system aims to provide a meal planning depending on the days desired by the user and restrictions such as dietary restrictions and included or excluded ingredients.
+* Moreover, the expert system uses the personal information of the user such as gender, height, weight and age.
 
-### Frontend Installation Steps
+## Frontend Installation Steps
 1. Go to the Frontend Folder.
    * Go to the terminal, then run:
   ```
@@ -25,7 +27,7 @@ The NutriGuide Expert System is using a hybrid method that combines both the Rul
   ```
    npm run dev
   ```
-### Backend Installation Steps
+## Backend Installation Steps
 1. Go to the Backend Folder.
    * Go to the terminal, then run:
   ```
