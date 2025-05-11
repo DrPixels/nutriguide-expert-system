@@ -5,16 +5,12 @@ from expertsystem.nutritionaladvisor import NutritionalAdvisorExpertSystem
 app = Flask(__name__)
 CORS(app) 
 
-@app.route('/')
-def index():
-    return "Hello, World"
-
+# Route for accessing the meal plan
 @app.route('/api/generate-meal-plan', methods=['POST'])
 def generate_meal_plan() :
 
+    # Parse the data after accepting it from the frontend
     data = request.get_json()
-    print(data)
-    
 
     days = data.get('days')
     gender = data.get('gender')
@@ -42,6 +38,7 @@ def generate_meal_plan() :
     included_ingredients = data.get('includedIngredients')
     excluded_ingredients = data.get('excludedIngredients')
 
+    # Initiliaze a new expert system
     expertSystem = NutritionalAdvisorExpertSystem(days, 
                                                   gender, 
                                                   height_in_cm, 
@@ -54,6 +51,7 @@ def generate_meal_plan() :
                                                   excluded_ingredients, 
                                                   meal_distribution)
     
+    # Return the meal plan
     return expertSystem.generate_meal_plan()
 
 if __name__ == "__main__":

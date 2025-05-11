@@ -6,10 +6,12 @@ import json
 import random
 import os
 
+# For filing purposes
 BASE_DIR = os.path.dirname(os.path.abspath(__file__))
 data_file_path = os.path.join(BASE_DIR, '..', 'data', 'healthy_foods.json')
 case_base_file_path = os.path.join(BASE_DIR, '..', 'data', 'case_base.json')
 
+# Create the Nutrional Advisor Expert System Class
 class NutritionalAdvisorExpertSystem():
     def __init__(self, 
                  days: int,
@@ -23,18 +25,19 @@ class NutritionalAdvisorExpertSystem():
                  included_ingredients: list,
                  excluded_ingredients: list,
                  meal_distribution: list):
-        self.days = int(days)         
-        self.gender = gender
-        self.height_in_cm = float(height_in_cm)
-        self.age = int(age)
-        self.weight_in_kg = float(weight_in_kg)
-        self.activity_level_number = int(activity_level_number)
-        self.health_goal = health_goal
-        self.dietary_restrictions = dietary_restrictions
-        self.included_ingredients = included_ingredients
-        self.excluded_ingredients = excluded_ingredients
-        self.meal_distribution = meal_distribution
+        self.days = int(days) # Days of meal plan    
+        self.gender = gender # Gender of the user
+        self.height_in_cm = float(height_in_cm)  # Height of the user in cm
+        self.age = int(age) # Age of the user
+        self.weight_in_kg = float(weight_in_kg) # Weight of the user in kg
+        self.activity_level_number = int(activity_level_number) # Activity level number
+        self.health_goal = health_goal # Health goal of the user
+        self.dietary_restrictions = dietary_restrictions # Dietary Restrictions
+        self.included_ingredients = included_ingredients # Included Ingredients
+        self.excluded_ingredients = excluded_ingredients # Excluded Ingredients
+        self.meal_distribution = meal_distribution # Meal distribution
     
+    # Get the data
     def get_data(self):
         data: list
         # Open and read the JSON file
@@ -42,6 +45,8 @@ class NutritionalAdvisorExpertSystem():
             data = json.load(file)
         return data
 
+    # Compute the activity level multiplier based on the activity level
+    # Using fuzzy logic
     def compute_activity_level_multiplier(self) -> int:
 
         if(self.activity_level_number < 1 or self.activity_level_number > 10):
@@ -62,7 +67,6 @@ class NutritionalAdvisorExpertSystem():
         multiplier['low'] = fuzz.trimf(multiplier.universe, [1.2, 1.2, 1.4])
         multiplier['moderate'] = fuzz.trimf(multiplier.universe, [1.3, 1.5, 1.7])
         multiplier['high'] = fuzz.trimf(multiplier.universe, [1.6, 1.9, 1.9])
-
 
         # Step 3: Define fuzzy rules
         rule1 = ctrl.Rule(activity_level['low'], multiplier['low'])
@@ -91,9 +95,12 @@ class NutritionalAdvisorExpertSystem():
         else:
             raise(Exception("Invalid gender. Please provide a valid gender."))
     
+    # For calculating the TDEE (Total Daily Energy Expenditure)
     def calculate_tdee(self):
+        # BMR * Activity Level
         return self.calculate_bmr() * self.compute_activity_level_multiplier()
 
+    # For calculating the calorie limit
     def calculate_calorie_limit(self):
 
         # Reducing 15% per day
@@ -102,11 +109,13 @@ class NutritionalAdvisorExpertSystem():
         # Adding 15% per day
         elif self.health_goal == "weightGain":
             return int(round(self.calculate_tdee() * 1.15))
+        # Maintain the weight
         elif self.health_goal == "maintainWeight":
             return self.calculate_tdee()
         else:
             raise Exception("Invalid health goal.")
     
+    # For getting the valid recipes based on the restrictions
     def is_recipe_valid(self, recipe, calorie_limit):
 
         # Check calorie limit
@@ -127,20 +136,29 @@ class NutritionalAdvisorExpertSystem():
         
         return True
     
+    # For generating the meal plan
     def generate_meal_plan(self):
 
+        # Calculate the calorie limit
         calorie_limit = self.calculate_calorie_limit()
 
+        # Get the recipes
         recipes = self.get_data()
+        # Shuffle them to avoid repeating recipes
         random.shuffle(recipes)
 
+        # Filter the recipes based on the restriction
         valid_recipes = [
             recipe for recipe in recipes if self.is_recipe_valid(recipe, calorie_limit)
         ]
 
+        # Meal plan
         meal_plan = {}
-        used_recipes = set()  # To track recipes already used (for variety)
 
+        # To track recipes already used (for variety)
+        used_recipes = set()  
+
+        # Calorie Breakdown
         calorie_breakdown = {
             "Breakfast": int(round(calorie_limit * 0.3)),
             "Lunch": int(round(calorie_limit * 0.35)),
@@ -151,9 +169,7 @@ class NutritionalAdvisorExpertSystem():
         for meal in self.meal_distribution:
             calorie_breakdown[meal['mealType']] = int(round(calorie_limit * (meal['percentage'] / 100)))
 
-        for key, value in calorie_breakdown.items():
-            print(f'{key}: {value}')
-        
+        # Loop through the days
         for day in range(1, self.days + 1):
             day_meals = {"Breakfast": None, "Lunch": None, "Dinner": None, "Snacks": None}
             total_day_calories = 0
@@ -165,16 +181,23 @@ class NutritionalAdvisorExpertSystem():
 
                 while not recipe_found:
                     for recipe in valid_recipes:
+                        # To ensure that the recipe is valid
+                        # Calorie limit won't exceed
+                        # Limit the discrepancy of the recipe
                         if (recipe['title'] not in used_recipes 
                             and total_day_calories + recipe['calories'] <= calorie_limit 
                             and abs(calorie_breakdown[meal_type] - recipe['calories']) <= threshold):
 
+                            # Set the recipe
                             day_meals[meal_type] = recipe
+                            # Add to the total calorie for that day
                             total_day_calories += recipe["calories"]
+                            # Add the recipe
                             used_recipes.add(recipe["title"])
                             recipe_found = True
                             break  # Move to the next meal type
                     
+                    # Increase the threshold if there is no recipe found
                     threshold = threshold + 20
                 
                 # Add the day's meals to the meal plan

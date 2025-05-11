@@ -3,7 +3,7 @@
 import type React from "react";
 
 import { useState, useEffect } from "react";
-import { ArrowDown, ArrowUp, GripVertical, Key, X } from "lucide-react";
+import { ArrowDown, ArrowUp, GripVertical, Key, X, Users, Github, Linkedin, Twitter, Mail } from "lucide-react";
 import { HashLoader, PulseLoader } from "react-spinners";
 import jsPDF from "jspdf";
 import html2canvas from "html2canvas";
@@ -16,6 +16,7 @@ export default function NutrionalAdvisor() {
   const [isGenerating, setIsGenerating] = useState(false);
   const [showModal, setShowModal] = useState(false);
   const [generatedMealPlanData, setGeneratedMealPlanData] = useState(null);
+  const [showTeamModal, setShowTeamModal] = useState(false);
 
   const [formData, setFormData] = useState({
     days: 1,
@@ -41,6 +42,77 @@ export default function NutrionalAdvisor() {
       { mealType: "Snacks", percentage: 10, order: 3 },
     ],
   });
+
+  // Team members data
+  const teamMembers = [
+    {
+      name: "Lorenzo Arwen Argayoso",
+      role: "UI/UX Designer",
+      bio: "Full-stack developer with 8 years of experience in React and TypeScript. Passionate about creating intuitive user interfaces and optimizing application performance.",
+      avatar: "/placeholder.svg?height=200&width=200",
+      social: {
+        github: "https://github.com/alexjohnson",
+        linkedin: "https://linkedin.com/in/alexjohnson",
+        twitter: "https://twitter.com/alexjohnson",
+        email: "alex@mealplanner.com",
+      },
+    },
+    {
+      name: "Stevie Ray Llemit",
+      role: "UI/UX Designer",
+      bio: "Registered dietitian with a Master's in Nutrition Science. Specializes in personalized meal planning and has contributed to numerous health publications.",
+      avatar: "/placeholder.svg?height=200&width=200",
+      social: {
+        linkedin: "https://linkedin.com/in/sophiachen",
+        twitter: "https://twitter.com/sophiachen",
+        email: "sophia@mealplanner.com",
+      },
+    },
+    {
+      name: "Adrian Macabutas",
+      role: "UI/UX Designer",
+      bio: "Award-winning designer with a focus on creating accessible and beautiful user experiences. Previously worked at top design agencies before joining the team.",
+      avatar: "/placeholder.svg?height=200&width=200",
+      social: {
+        github: "https://github.com/marcuswilliams",
+        linkedin: "https://linkedin.com/in/marcuswilliams",
+        email: "marcus@mealplanner.com",
+      },
+    },
+    {
+      name: "Mikhail Angelo Mistula",
+      role: "UI/UX Designer",
+      bio: "Systems architect specializing in scalable applications. Experienced in building robust APIs and database structures for health and wellness platforms.",
+      avatar: "/placeholder.svg?height=200&width=200",
+      social: {
+        github: "https://github.com/priyapatel",
+        linkedin: "https://linkedin.com/in/priyapatel",
+        email: "priya@mealplanner.com",
+      },
+    },
+    {
+      name: "Jedd Benedick Salvador",
+      role: "UI/UX Designer",
+      bio: "Systems architect specializing in scalable applications. Experienced in building robust APIs and database structures for health and wellness platforms.",
+      avatar: "/placeholder.svg?height=200&width=200",
+      social: {
+        github: "https://github.com/priyapatel",
+        linkedin: "https://linkedin.com/in/priyapatel",
+        email: "priya@mealplanner.com",
+      },
+    },
+    {
+      name: "Rhem Giou Salvador",
+      role: "Lead Developer",
+      bio: "Systems architect specializing in scalable applications. Experienced in building robust APIs and database structures for health and wellness platforms.",
+      avatar: "/placeholder.svg?height=200&width=200",
+      social: {
+        github: "https://github.com/priyapatel",
+        linkedin: "https://linkedin.com/in/priyapatel",
+        email: "priya@mealplanner.com",
+      },
+    },
+  ];
 
   const [errors, setErrors] = useState({
     gender: "",
@@ -280,7 +352,16 @@ export default function NutrionalAdvisor() {
   return (
     <div className="min-h-screen bg-green-50 py-8 px-4">
       <div className="max-w-2xl mx-auto">
-        <h1 className="text-center text-3xl font-bold text-green-700 mb-8">NUTRIGUIDE</h1>
+        <h1 className="text-center text-3xl font-bold text-green-700 mb-2">NUTRIGUIDE</h1>
+        <div className="flex justify-center mb-6">
+          <button
+            onClick={() => setShowTeamModal(true)}
+            className="justify-center flex items-center gap-1 bg-gray-100 hover:bg-gray-200 text-gray-700 px-3 py-1.5 rounded-md text-sm font-medium transition-colors"
+          >
+            <Users size={16} />
+            <span>Meet Our Team</span>
+          </button>
+        </div>
         <h1 className=" text-2xl font-semibold text-green-600 mb-1">Create your meal plan</h1>
 
         <form onSubmit={handleSubmit} className="space-y-4">
@@ -699,6 +780,102 @@ export default function NutrionalAdvisor() {
           </button>
         </form>
       </div>
+
+      {/* Team Modal */}
+      {showTeamModal && (
+        <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center p-4 z-50 overflow-y-auto">
+          <div className="bg-white rounded-lg shadow-xl max-w-4xl w-full max-h-[90vh] overflow-y-auto">
+            <div className="p-6">
+              <div className="flex justify-between items-center mb-6">
+                <h2 className="text-2xl font-bold text-green-700">Meet Our Team</h2>
+                <button
+                  onClick={() => setShowTeamModal(false)}
+                  className="bg-gray-200 hover:bg-gray-300 p-2 rounded-full"
+                >
+                  <X size={20} />
+                </button>
+              </div>
+
+              <p className="text-gray-600 mb-8">
+                Our dedicated team of professionals has worked tirelessly to create this meal planning system. Each
+                member brings unique expertise to ensure you receive the most accurate and personalized meal plans.
+              </p>
+
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
+                {teamMembers.map((member, index) => (
+                  <div key={index} className="bg-gray-50 rounded-lg overflow-hidden shadow-md">
+                    <div className="flex flex-col sm:flex-row">
+                      <div className="sm:w-1/3">
+                        <img
+                          src={member.avatar || "/placeholder.svg"}
+                          alt={member.name}
+                          className="w-full h-full object-cover"
+                        />
+                      </div>
+                      <div className="p-4 sm:w-2/3">
+                        <h3 className="text-xl font-semibold text-green-700">{member.name}</h3>
+                        <p className="text-sm font-medium text-gray-500 mb-2">{member.role}</p>
+                        <p className="text-sm text-gray-600 mb-3">{member.bio}</p>
+
+                        <div className="flex space-x-2">
+                          {member.social.github && (
+                            <a
+                              href={member.social.github}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-gray-600 hover:text-gray-900"
+                            >
+                              <Github size={18} />
+                            </a>
+                          )}
+                          {member.social.linkedin && (
+                            <a
+                              href={member.social.linkedin}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-gray-600 hover:text-gray-900"
+                            >
+                              <Linkedin size={18} />
+                            </a>
+                          )}
+                          {member.social.twitter && (
+                            <a
+                              href={member.social.twitter}
+                              target="_blank"
+                              rel="noopener noreferrer"
+                              className="text-gray-600 hover:text-gray-900"
+                            >
+                              <Twitter size={18} />
+                            </a>
+                          )}
+                          {member.social.email && (
+                            <a href={`mailto:${member.social.email}`} className="text-gray-600 hover:text-gray-900">
+                              <Mail size={18} />
+                            </a>
+                          )}
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              <div className="mt-8 p-4 bg-green-50 rounded-lg">
+                <h3 className="text-lg font-semibold text-green-700 mb-2">About Our Project</h3>
+                <p className="text-gray-600 mb-3">
+                  The NutriGuide was developed to help individuals create personalized nutrition plans based on their
+                  specific needs and goals. Our system combines nutritional science with technology to deliver accurate
+                  and actionable meal plans.
+                </p>
+                <p className="text-gray-600">
+                  We're constantly working to improve our system and would love to hear your feedback. Feel free to
+                  reach out to any team member with suggestions or questions.
+                </p>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
 
       {/* Meal Plan Modal */}
       {showModal && generatedMealPlanData && (
