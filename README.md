@@ -1,4 +1,4 @@
-# NutriGuide Expert System
+# NutriGuide: A Nutritional Advisor Expert System using Rule-based and Fuzzy Logic Approach
 
 ## Expert System Description
 * The NutriGuide Expert System is a full-stack website that uses <b>React + Typescript</b> for its frontend and <b>Flask</b> for its backend.  
